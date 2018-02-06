@@ -10,12 +10,14 @@
 			#convertButton{display:block;}
 		</style>
 		<script type = "text/javascript">
+			var stringSizeLimit = 9999999;
+			//Generate character arrays
 			function makeCharArrays(str){
 				var returnValues = new Array(0);
-				for (var i = 0; i<=Math.floor((str.length)/9999999); i++){
+				for (var i = 0; i<=Math.floor((str.length)/stringSizeLimit); i++){
 					returnValues[i] = new Array(0);					
-					for (var j = 0; j<(str.length)%9999999; j++){
-						returnValues[i][j] = str.charCodeAt(i*9999999+j);
+					for (var j = 0; j<(str.length)%stringSizeLimit; j++){
+						returnValues[i][j] = str.charCodeAt(i*stringSizeLimit+j);
 					}
 				}
 				return returnValues;
