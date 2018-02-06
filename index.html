@@ -10,39 +10,42 @@
 			#convertButton{display:block;}
 		</style>
 		<script type = "text/javascript">
-			var stringSizeLimit = 9999999;
-			//Generate character arrays
-			function makeCharArrays(str){
-				var returnValues = new Array(0);
-				for (var i = 0; i<=Math.floor((str.length)/stringSizeLimit); i++){
-					returnValues[i] = new Array(0);					
-					for (var j = 0; j<(str.length)%stringSizeLimit; j++){
-						returnValues[i][j] = str.charCodeAt(i*stringSizeLimit+j);
-					}
+			var STRINGSIZELIMIT = 9999999;
+
+			//Generates an array containing numeric representations of the UTF-16 code points of the argument str
+			function makeCharArray(str){
+				var returnValue = new Array(0);
+				for (var i = 0; i<str.length; i++){
+					returnValue[i] = str.charCodeAt(i);
 				}
-				return returnValues;
+				return returnValue;
 			}
 
+			//Generates a script that executes the obfuscated input script 
 			function makeOutput(arg){
 				var returnValue = "";
-				var charArrays = makeCharArrays(arg);
-				for (var i = 0; i<charArrays.length; i++){
-					if (charArrays[i].length != 0){
-						returnValue += "call compile toString [";
-						for (var j = 0; j<charArrays[i].length; j++){
-							returnValue += charArrays[i][j].toString() + ",";
-						};
-						returnValue = returnValue.substring(0,returnValue.length-1);
-						returnValue += "];\n";
+				var charArray = makeCharArray(arg);
+
+				if (charArray.length != 0){
+					returnValue += "call compile toString [";
+					for (var i = 0; i<charArray.length; i++){					
+						returnValue += charArray[i].toString() + ",";
 					}
+					returnValue = returnValue.substring(0,returnValue.length-1);
+					returnValue += "];\n";
 				}
 				return returnValue;
 			}
 
 			function convert(){
 				var inputString = document.getElementById("sqfIn").value;
-				var outputString = makeOutput(inputString);
-				document.getElementById("sqfOut").value = outputString;
+				if (inputString.length > STRINGSIZELIMIT) {
+					alert("Input too long");
+				}
+				else {
+					var outputString = makeOutput(inputString);
+					document.getElementById("sqfOut").value = outputString;
+				}
 			}
 		</script>
 	</head>
