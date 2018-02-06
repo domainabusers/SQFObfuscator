@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+	<head>
+		<title>SQF Obfuscator</title>
+		<style type = "text/css">
+			body {color:#ffffff; background-color:#000000; font-family:sans-serif;}
+			a {color:#ffffff;}
+			.textboxContainer {display:inline-block; width:min-content; margin:0px; padding:0px;}
+			.textboxContainer>label{display:inline;}
+			#convertButton{display:block;}
+		</style>
+		<script type = "text/javascript">
+			function makeCharArrays(str){
+				var returnValues = new Array(0);
+				for (var i = 0; i<=Math.floor((str.length)/9999999); i++){
+					returnValues[i] = new Array(0);					
+					for (var j = 0; j<(str.length)%9999999; j++){
+						returnValues[i][j] = str.charCodeAt(i*9999999+j);
+					}
+				}
+				return returnValues;
+			}
+
+			function makeOutput(arg){
+				var returnValue = "";
+				var charArrays = makeCharArrays(arg);
+				for (var i = 0; i<charArrays.length; i++){
+					if (charArrays[i].length != 0){
+						returnValue += "call compile toString [";
+						for (var j = 0; j<charArrays[i].length; j++){
+							returnValue += charArrays[i][j].toString() + ",";
+						};
+						returnValue = returnValue.substring(0,returnValue.length-1);
+						returnValue += "];\n";
+					}
+				}
+				return returnValue;
+			}
+
+			function convert(){
+				var inputString = document.getElementById("sqfIn").value;
+				var outputString = makeOutput(inputString);
+				document.getElementById("sqfOut").value = outputString;
+			}
+		</script>
+	</head>
+	<body>
+		<h1>SQF Obfuscator</h1>
+		<p>Converts <a href="https://community.bistudio.com/wiki/SQF_syntax">SQF script</a> (Real Virtuality Engine script) to a character code array with accompanying execution script. Assumes valid SQF code is input. Requires Javascript.</p>
+		<form id = "form1" onSubmit="convert();">
+			<div class = "textboxContainer">
+				<label for="sqfIn">SQF Input</label>
+				<textarea id="sqfIn" name="sqfIn" cols="60" rows="20"></textarea>
+			</div>
+			<div class = "textboxContainer">
+				<label for = "sqfOut">SQF Output</label>
+				<textarea id = "sqfOut" name="sqfOut" cols = "60" rows = "20"></textarea>
+			</div>
+			<button type = "button" id = "convertButton" onClick="convert();">Convert</button>
+		</form>
+	</body>
+</html>
